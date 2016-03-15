@@ -1,0 +1,6 @@
+rectangle(height=30, width=80, left=0, background="blue")
+	text(color="white", top=8, left=23)|Home
+rectangle(height=30, width=85, left=80, background="red")
+	text(color="white", top=8, left=24)|About
+rectangle(height=30, width=80, left=165, background="green")
+	text(color="white", top=8, left=20)|Contact

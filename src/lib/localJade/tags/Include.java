@@ -1,0 +1,55 @@
+package lib.localJade.tags;
+
+import lib.localJade.LocalJade;
+
+import java.awt.*;
+import java.util.LinkedList;
+import java.util.Map;
+
+public class Include extends ElementTag {
+
+    public Include(java.util.List<Tag> children, Map<String, Object> attrs, LocalJade root){
+        /*-- Initialize Default Values --*/
+        this.attrs.put("file", null);
+        this.attrs.put("top", 0);
+        this.attrs.put("left", 0);
+
+        this.children = children;
+        this.attrs.putAll(attrs);
+        this.root = root;
+        update(attrs);
+    }
+
+    public Include(Map<String, Object> attrs, LocalJade root){
+        this(new LinkedList<Tag>(), attrs, root);
+    }
+
+    @Override
+    public void update(Map<String, Object> attrs) {
+        this.attrs.putAll(attrs);
+        if(this.attrs.get("file") != null){
+            try {
+                this.children = new LocalJade().loadViewTags(root.view.getPath()+this.attrs.get("file").toString(), root, this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        int top = getTop();
+        int left = getLeft();
+        super.updateBounds(top, left, top + getHeight(), left + getWidth());
+    }
+
+    public void draw(Graphics g) {
+        super.draw(g);
+    }
+
+    @Override
+    public int getHeight() {
+        return 0;
+    }
+
+    @Override
+    public int getWidth() {
+        return 0;
+    }
+}
