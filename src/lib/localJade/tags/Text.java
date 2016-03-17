@@ -1,5 +1,7 @@
 package lib.localJade.tags;
 
+import lib.localJade.LocalJade;
+
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.Map;
@@ -12,7 +14,7 @@ public class Text extends ElementTag {
 
     Font font = null;
 
-	public Text(java.util.List<Tag> children, Map<String, Object> attrs){
+	public Text(java.util.List<Tag> children, Map<String, Object> attrs, LocalJade root){
         /*-- Initialize Default Values --*/
         this.attrs.put("size", 12);
         this.attrs.put("font", "Arial");
@@ -22,14 +24,15 @@ public class Text extends ElementTag {
         this.pre.put("top", 40);
         this.pre.put("left", 7);
 
+        this.root = root;
 		this.children = children;
 
         update(attrs);
 
 	}
 
-	public Text(Map<String, Object> attrs){
-		this(new LinkedList<Tag>(), attrs);
+	public Text(Map<String, Object> attrs, LocalJade root){
+		this(new LinkedList<Tag>(), attrs, root);
 	}
 
     public void update(Map<String, Object> attrs) {

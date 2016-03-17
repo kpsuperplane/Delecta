@@ -1,15 +1,17 @@
 package framework.core;
 
-import lib.localJade.LocalJade;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Kevin on 3/11/2016.
@@ -20,18 +22,19 @@ public class View {
     private Graphics bufferGraphics;
     private Image offscreen;
     private Core core;
-    private Object driver;
+    public Object driver;
     private int width, height;
-    public View(Core core){
+    public View(Core core) throws Exception {
         this.core = core;
         this.width =  Integer.valueOf(((HashMap<String, Object>) core.config.get("views")).get("width").toString());
         this.height =  Integer.valueOf(((HashMap<String, Object>) core.config.get("views")).get("height").toString());
         loadGUI();
     }
-    private void loadGUI(){
+    private void loadGUI() throws Exception {
         offscreen = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
         bufferGraphics = offscreen.getGraphics();
-        driver = new LocalJade();
+        Constructor<?> constructor = core.viewDriver.getConstructor();
+        driver = constructor.newInstance();
         frame = new FrameworkWindow(core.config.get("appName").toString());
         frame.addMouseMotionListener(new MouseAdapter() {
             public void mouseMoved(MouseEvent evt) {

@@ -23,23 +23,33 @@ public abstract class Tag {
 
     public abstract void update(Map<String, Object> attrs);
 
+    public void set(String key, String val){
+        attrs.put(key, val);
+    }
+
     public void update(){
-        if(this.attrs.get("id") != null){
-            root.ids.put(this.attrs.get("id").toString(), this);
+        if(root != null){
+            if(attrs.get("id") != null){
+                root.ids.put(attrs.get("id").toString(), this);
+            }
+            if(attrs.get("class") != null){
+                root.classes.get(attrs.get("id").toString()).push(this);
+            }
         }
+    }
+
+    public ElementTag toElement(){
+        return (ElementTag)this;
     }
 
 	public static Tag getTag(String name, Map<String, Object> attrs, LocalJade root){
 		Tag temp = null;
 		if(name.equals("rectangle")){
-            temp = new Rectangle(attrs);
+            temp = new Rectangle(attrs, root);
 		}else if(name.equals("text")){
-            temp = new Text(attrs);
+            temp = new Text(attrs, root);
         }else if(name.equals("include")){
             temp = new Include(attrs, root);
-        }
-        if(temp != null){
-            temp.setRoot(root);
         }
         return temp;
 	}

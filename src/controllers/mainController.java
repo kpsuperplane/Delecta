@@ -13,5 +13,7 @@ public class mainController extends baseController{
         args.put("name", "Frank");
         args.put("bg", "blue");
         View.loadView("main.lj", args);
+        Thread.sleep(8000);
+        Selector.find("#transparentBox").set("background", "yellow").find("#message").set("color", "black");
     }
 }

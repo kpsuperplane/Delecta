@@ -16,6 +16,7 @@ public class LocalJade{
     public View view = null;
     private LocalJade root = this;
     public ElementTag parent = null;
+    public Selector selector = new Selector(this);
     public Map<Tag, Map<String, Object>> hovered = new HashMap<Tag, Map<String, Object>>();
     public Map<String, Object> attrBk = new HashMap<String, Object>();
     public Map<String, String> vars = null;

@@ -1,11 +1,13 @@
 package lib.localJade.tags;
 
+import lib.localJade.LocalJade;
+
 import java.awt.*;
 import java.util.*;
 
 public class Rectangle extends ElementTag {
 
-	public Rectangle(java.util.List<Tag> children, Map<String, Object> attrs){
+	public Rectangle(java.util.List<Tag> children, Map<String, Object> attrs, LocalJade root){
         /*-- Initialize Default Values --*/
         this.attrs.put("background", "transparent");
         this.attrs.put("width", 150);
@@ -14,13 +16,14 @@ public class Rectangle extends ElementTag {
         this.pre.put("top", 31);
         this.pre.put("left", 8);
 
+		this.root = root;
 		this.children = children;
 
 		update(attrs);
 	}
 	
-	public Rectangle(Map<String, Object> attrs){
-		this(new LinkedList<Tag>(), attrs);
+	public Rectangle(Map<String, Object> attrs, LocalJade root){
+		this(new LinkedList<Tag>(), attrs, root);
 	}
 
 	@Override
