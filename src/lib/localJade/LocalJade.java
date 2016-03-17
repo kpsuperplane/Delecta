@@ -19,6 +19,10 @@ public class LocalJade{
     public Map<Tag, Map<String, Object>> hovered = new HashMap<Tag, Map<String, Object>>();
     public Map<String, Object> attrBk = new HashMap<String, Object>();
     public Map<String, String> vars = null;
+
+    public Map<String, Tag> ids = new HashMap<String, Tag>();
+    public Map<String, LinkedList<Tag>> classes = new HashMap<String, LinkedList<Tag>>();
+
     public void paint(Graphics g) {
         for(Tag tag : tags){
         	tag.draw(g);
@@ -50,16 +54,19 @@ public class LocalJade{
             if(!line.isEmpty()){ //make sure there is something on this line
                 int startAttr = line.indexOf("(");
                 int textStart = line.indexOf("|");
+                if(textStart < line.lastIndexOf(")")){
+                    textStart = -1;
+                }
                 String text = "";
                 int tagEnd = startAttr != -1 ? startAttr : textStart != -1 ? textStart : line.length();
                 String tag = line.substring(0, tagEnd);
                 Map<String, Object> attrs = new HashMap<String, Object>();
                 if(startAttr != -1){
-                    int endAttr = line.indexOf(")");
+                    int endAttr = line.lastIndexOf(")");
                     String attrFull[] = line.substring(startAttr+1, endAttr).split(",");
                     for(String attr: attrFull){
-                        String parts[] = attr.split("=");
-                        String val = parts[1].trim();
+                        int equals = attr.indexOf("=");
+                        String val = attr.substring(equals+1).trim();
                         Object insert = val;
                         if(val.length() > 1 && ((val.charAt(0) == '"' && val.charAt(val.length()-1) == '"') || (val.charAt(0) == '\'' && val.charAt(val.length()-1) == '\''))){
                             val = val.substring(1, val.length()-1);
@@ -70,7 +77,7 @@ public class LocalJade{
                         }else{
                             insert = Integer.valueOf(val);
                         }
-                        attrs.put(parts[0].trim(), insert);
+                        attrs.put(attr.substring(0, equals).trim(), insert);
                     }
                 }
                 if(textStart != -1){

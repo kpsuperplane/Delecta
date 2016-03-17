@@ -32,7 +32,6 @@ public class Text extends ElementTag {
 		this(new LinkedList<Tag>(), attrs);
 	}
 
-    @Override
     public void update(Map<String, Object> attrs) {
         this.attrs.putAll(attrs);
         try {
@@ -41,6 +40,7 @@ public class Text extends ElementTag {
             e.printStackTrace();
         }
         updated = false;
+        super.update();
     }
 
     public void draw(Graphics g) {

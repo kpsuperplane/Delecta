@@ -29,6 +29,7 @@ public class Rectangle extends ElementTag {
         int top = getTop();
         int left = getLeft();
         super.updateBounds(top, left, top + getHeight(), left + getWidth());
+		super.update();
 	}
 
 	public void draw(Graphics g) {

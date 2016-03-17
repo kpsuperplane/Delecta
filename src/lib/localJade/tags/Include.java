@@ -24,7 +24,6 @@ public class Include extends ElementTag {
         this(new LinkedList<Tag>(), attrs, root);
     }
 
-    @Override
     public void update(Map<String, Object> attrs) {
         this.attrs.putAll(attrs);
         if(this.attrs.get("file") != null){
@@ -37,6 +36,7 @@ public class Include extends ElementTag {
         int top = getTop();
         int left = getLeft();
         super.updateBounds(top, left, top + getHeight(), left + getWidth());
+        super.update();
     }
 
     public void draw(Graphics g) {

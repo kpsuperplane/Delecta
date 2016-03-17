@@ -68,11 +68,11 @@ abstract public class ElementTag extends Tag{
         }
         if(event.getX() >= left && event.getX() <= left + getWidth() && event.getY() >= top && event.getY() <= top + getHeight()){
             if(type.equals("hover")){
-                if(!root.hovered.containsKey(this) && Rectangle.class.isInstance(this)){
+                if(!root.hovered.containsKey(this) && this.attrs.containsKey("hover")){
                     Map<String, Object> bk = new HashMap<String, Object>();
                     bk.putAll(this.attrs);
                     root.hovered.put(this, bk);
-                    attrs.put("background", "yellow");
+                    attrs.putAll(parseAttr(this.attrs.get("hover").toString()));
                 }
             }
             toReturn = true;

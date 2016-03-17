@@ -13,6 +13,7 @@ public abstract class Tag {
     public LocalJade root = null;
 	public Map<String, Object> attrs = new HashMap<String, Object>(){{
         put("id", null);
+        put("class", null);
     }};
 	public java.util.List<Tag> children = new LinkedList<Tag>();
 
@@ -20,7 +21,13 @@ public abstract class Tag {
         this.root = root;
     }
 
-    abstract public void update(Map<String, Object> attrs);
+    public abstract void update(Map<String, Object> attrs);
+
+    public void update(){
+        if(this.attrs.get("id") != null){
+            root.ids.put(this.attrs.get("id").toString(), this);
+        }
+    }
 
 	public static Tag getTag(String name, Map<String, Object> attrs, LocalJade root){
 		Tag temp = null;
@@ -36,6 +43,36 @@ public abstract class Tag {
         }
         return temp;
 	}
+
+    private String getVar(String var){
+        return root.vars.getOrDefault(var, null);
+    }
+
+    protected Map<String, Object> parseAttr(String line){
+        int startAttr = line.indexOf("[");
+        Map<String, Object> subAttrs = new HashMap<String, Object>();
+        if(startAttr != -1){
+            int endAttr = line.lastIndexOf("]");
+            String attrFull[] = line.substring(startAttr+1, endAttr).split("\\|");
+            for(String attr: attrFull){
+                String parts[] = attr.split("=");
+                String val = parts[1].trim();
+                Object insert = val;
+                if(val.length() > 1 && ((val.charAt(0) == '"' && val.charAt(val.length()-1) == '"') || (val.charAt(0) == '\'' && val.charAt(val.length()-1) == '\''))){
+                    val = val.substring(1, val.length()-1);
+                    insert = val;
+                }else if(val.length() > 0 && val.charAt(0) == '@'){
+                    val = getVar(val.substring(1));
+                    insert = val;
+                }else{
+                    insert = Integer.valueOf(val);
+                }
+                subAttrs.put(parts[0].trim(), insert);
+            }
+        }
+        return subAttrs;
+    }
+
     public Color getColor(String field) throws Exception {
         String color = attrs.get(field).toString();
         if(color.length() > 6 && color.substring(0, 5).equals("rgba[") && color.substring(color.length()-1).equals("]")){
