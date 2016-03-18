@@ -13,6 +13,8 @@ abstract public class ElementTag extends Tag{
 
     protected int top, left, bottom, right;
 
+    private boolean hovered = false;
+
     public Map<String, Object> pre = new HashMap<String, Object>(){
         {
             put("top", 0);
@@ -65,16 +67,17 @@ abstract public class ElementTag extends Tag{
             if(ElementTag.class.isInstance(child)){
                 if(((ElementTag)child).triggerMouseEvent(type, event)){
                     toReturn = true;
-                    break;
                 }
             }
         }
         if(event.getX() >= left && event.getX() <= left + getWidth() && event.getY() >= top && event.getY() <= top + getHeight()){
             if(type.equals("hover")){
-                if(!root.hovered.containsKey(this) && this.attrs.containsKey("hover")){
+                if(!hovered && this.attrs.containsKey("hover")){
+                    hovered = true;
+                    root.animationQueue.remove(this);
                     root.hovered.put(this, this.attrsBk);
                     Map<String, Object> newAttrs = parseAttr(this.attrs.get("hover").toString());
-                    if(!root.animationQueue.containsKey(this)){
+                    if(!transitions.isEmpty()){
                         Map<String, Animation> tmp = new HashMap<String, Animation>();
                         Iterator it = newAttrs.entrySet().iterator();
                         while (it.hasNext()) {
@@ -82,17 +85,43 @@ abstract public class ElementTag extends Tag{
                             String key = pair.getKey().toString();
                             if(transitions.containsKey(key)){
                                 Animation.Set tmpSet = (Animation.Set) transitions.get(key);
-                                tmp.put(key, new Animation(this, key, this.attrs.get(key), newAttrs.get(key), tmpSet.duration, tmpSet.ease));
+                                tmp.put(key, new Animation(this, key, attrs.get(key), newAttrs.get(key), tmpSet.duration, tmpSet.ease, root));
+                                it.remove();
                             }
                         }
                         root.animationQueue.put(this, tmp);
-                        root.view.requiresRepaint = true;
-                    }else{
-                        update(newAttrs);
                     }
+                    root.view.requiresRepaint = true;
+                    update(newAttrs);
                 }
             }
             toReturn = true;
+        }else{
+            if(type.equals("hover")){
+                if(hovered) {
+                    hovered = false;
+                    if(!transitions.isEmpty()){
+                        root.animationQueue.remove(this);
+                        Map<String, Object> newAttrs = new HashMap<String, Object>();
+                        newAttrs.putAll(this.attrsBk);
+                        Map<String, Animation> tmp = new HashMap<String, Animation>();
+                        Iterator it = newAttrs.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            String key = pair.getKey().toString();
+                            if(transitions.containsKey(key)){
+                                Animation.Set tmpSet = (Animation.Set) transitions.get(key);
+                                tmp.put(key, new Animation(this, key, this.attrs.get(key), newAttrs.get(key), tmpSet.duration, tmpSet.ease, root));
+                                it.remove();
+                            }
+                        }
+                        update(newAttrs);
+                        root.animationQueue.put(this, tmp);
+                    }
+                    root.view.requiresRepaint = true;
+                    root.restore("hover", this);
+                }
+            }
         }
         return toReturn;
     }

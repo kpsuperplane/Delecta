@@ -3,13 +3,14 @@ package lib.localJade.tags;
 import lib.localJade.LocalJade;
 
 import java.awt.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class Rectangle extends ElementTag {
 
 	public Rectangle(java.util.List<Tag> children, Map<String, Object> attrs, LocalJade root){
         /*-- Initialize Default Values --*/
-        this.attrs.put("background", "transparent");
+        this.attrs.put("background", new Color(0,0,0,0));
         this.attrs.put("width", 150);
         this.attrs.put("height", 100);
 		this.attrs.put("click", null);
@@ -39,7 +40,7 @@ public class Rectangle extends ElementTag {
 
 	public void draw(Graphics g) {
         try {
-			g.setColor(getColor("background"));
+			g.setColor((Color)attrs.get("background"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

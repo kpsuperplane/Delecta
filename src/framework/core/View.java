@@ -22,6 +22,7 @@ public class View {
     private Graphics bufferGraphics;
     private Image offscreen;
     private Core core;
+    public int frameRate = 60;
     public boolean requiresRepaint = false;
     public Object driver;
     private int width, height;
@@ -49,7 +50,7 @@ public class View {
         });
         frame.setVisible(true);
         Timer timer = new Timer();
-        timer.schedule(new Refresh(), 0, 33);
+        timer.schedule(new Refresh(), 0, Math.round(1000/(double)frameRate));
     }
 
     public String getPath(){

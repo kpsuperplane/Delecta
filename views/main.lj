@@ -1,6 +1,1 @@
-rectangle(background="red", top=10, hover="[background='blue']", left=10)
-	rectangle(background="rgb[00FF00]", top=10, left=10)
-		rectangle(background="rgba[00000088]", id="transparentBox", top=10, left=10, hover="[width=500]", transition="[width=1000]")
-			text(color="white", left=10, top=10, id="message")|Hello @{name}
-			include(file="sub/nav.lj", position="absolute", top=200)
-text|Bonjour
+rectangle(background="rgba[00000088]", id="transparentBox", top=10, left=10, hover="[width=500 | background='col[red]']", transition="[width:quad=2000 | background:linear=2000]")

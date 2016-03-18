@@ -18,7 +18,7 @@ public class Text extends ElementTag {
         /*-- Initialize Default Values --*/
         this.attrs.put("size", 12);
         this.attrs.put("font", "Arial");
-        this.attrs.put("color", "black");
+        this.attrs.put("color", new Color(0,0,0,0));
         this.attrs.put("style", "PLAIN");
         this.attrs.put("text", "");
         this.pre.put("top", 40);
@@ -66,7 +66,7 @@ public class Text extends ElementTag {
         }
 
         try {
-            g.setColor(getColor("color"));
+            g.setColor((Color)attrs.get("color"));
             g.setFont(font);
         } catch (Exception e) {
             e.printStackTrace();

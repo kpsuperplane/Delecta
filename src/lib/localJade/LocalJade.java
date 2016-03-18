@@ -51,6 +51,10 @@ public class LocalJade{
         	tag.draw(g);
         }
     }
+    public void restore(String type, Tag target){
+        target.update(hovered.get(target));
+        hovered.remove(target);
+    }
     public void restore(String type){
         Iterator it = hovered.entrySet().iterator();
         while (it.hasNext()) {
@@ -90,17 +94,7 @@ public class LocalJade{
                     for(String attr: attrFull){
                         int equals = attr.indexOf("=");
                         String val = attr.substring(equals+1).trim();
-                        Object insert = val;
-                        if(val.length() > 1 && ((val.charAt(0) == '"' && val.charAt(val.length()-1) == '"') || (val.charAt(0) == '\'' && val.charAt(val.length()-1) == '\''))){
-                            val = val.substring(1, val.length()-1);
-                            insert = val;
-                        }else if(val.length() > 0 && val.charAt(0) == '@'){
-                            val = vars.get(val.substring(1));
-                            insert = val;
-                        }else{
-                            insert = Integer.valueOf(val);
-                        }
-                        attrs.put(attr.substring(0, equals).trim(), insert);
+                        attrs.put(attr.substring(0, equals).trim(), parseTag(val));
                     }
                 }
                 if(textStart != -1){
@@ -137,21 +131,43 @@ public class LocalJade{
 
     public void triggerMouseEvent(String type, MouseEvent event){
         int oldCount = hovered.size();
-        restore("hover");
-        hovered.clear();
         for (ListIterator iterator = tags.listIterator(tags.size()); iterator.hasPrevious();) {
             final Object child = iterator.previous();
             if(ElementTag.class.isInstance(child)){
                 if(((ElementTag)child).triggerMouseEvent(type, event)){
-                    view.repaint();
+                    view.requiresRepaint = true;
                     return;
                 }
             }
         }
-        if(hovered.size() != oldCount){
-            view.repaint();
+        Iterator it = hovered.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            ((ElementTag)pair.getKey()).triggerMouseEvent(type, event);
+        }
+        if(!hovered.isEmpty() && oldCount != hovered.size()){
+            restore("hover");
+            hovered.clear();
+            view.requiresRepaint = true;
         }
 
+    }
+
+    private String getVar(String var){
+        return root.vars.getOrDefault(var, null);
+    }
+
+    public Object parseTag(String val){
+        if(val.length() > 1 && ((val.charAt(0) == '"' && val.charAt(val.length()-1) == '"') || (val.charAt(0) == '\'' && val.charAt(val.length()-1) == '\''))){
+            val = val.substring(1, val.length()-1);
+            if(ColorHelper.isColor(val)) return ColorHelper.getColor(val);
+            return val;
+        }else if(val.length() > 0 && val.charAt(0) == '@'){
+            val = getVar(val.substring(1));
+            return val;
+        }else{
+            return Integer.valueOf(val);
+        }
     }
 
 	public void loadView(String filename, View parent) throws Exception{
