@@ -1,6 +1,6 @@
-rectangle(height=30, width=80, left=0, background="blue", hover="[background='black']")
-	text(color="white", top=8, left=23)|Home
-rectangle(height=30, width=85, left=80, background="red", hover="[background='black']")
-	text(color="white", top=8, left=24)|About
-rectangle(height=30, width=80, left=165, background="green", hover="[background='blue' | color='rgb[009900]']")
-	text(color="white", top=8, left=20)|Contact
+rectangle(height=30, width=80, left=0, class="box", background="blue", hover="[background='black']")
+	text(color="white", class="message", top=8, left=23)|Home
+rectangle(height=30, width=85, left=80, class="box", background="red", hover="[background='black']")
+	text(color="white", class="message", top=8, left=24)|About
+rectangle(height=30, width=80, left=165, class="box", background="green", hover="[background='blue' | color='rgb[009900]']")
+	text(color="white", class="message", top=8, left=20)|Contact

@@ -39,7 +39,7 @@ public class Selector{
     }
     public Selector set(String key, String val){
         for(Tag element : elements){
-            element.set(key, val);
+            element.update(key, val);
         }
         instance.view.repaint();
         return this;

@@ -22,6 +22,7 @@ public class View {
     private Graphics bufferGraphics;
     private Image offscreen;
     private Core core;
+    public boolean requiresRepaint = false;
     public Object driver;
     private int width, height;
     public View(Core core) throws Exception {
@@ -81,6 +82,10 @@ public class View {
     }
     class Refresh extends TimerTask {
         public void run() {
+            if(requiresRepaint){
+                requiresRepaint = false;
+                repaint();
+            }
             frame.repaint();
         }
     }

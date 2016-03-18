@@ -17,15 +17,18 @@ public class Include extends ElementTag {
         this.children = children;
         this.attrs.putAll(attrs);
         this.root = root;
-        update(attrs);
+        update(attrs, true);
     }
 
     public Include(Map<String, Object> attrs, LocalJade root){
         this(new LinkedList<Tag>(), attrs, root);
     }
 
-    public void update(Map<String, Object> attrs) {
+    public void update(Map<String, Object> attrs, boolean permanent) {
         this.attrs.putAll(attrs);
+        if(permanent){
+            this.attrsBk.putAll(this.attrs);
+        }
         if(this.attrs.get("file") != null){
             try {
                 this.children = new LocalJade().loadViewTags(root.view.getPath()+this.attrs.get("file").toString(), root, this);

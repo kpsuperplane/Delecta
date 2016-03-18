@@ -19,16 +19,18 @@ public class Rectangle extends ElementTag {
 		this.root = root;
 		this.children = children;
 
-		update(attrs);
+		update(attrs, true);
 	}
 	
 	public Rectangle(Map<String, Object> attrs, LocalJade root){
 		this(new LinkedList<Tag>(), attrs, root);
 	}
 
-	@Override
-	public void update(Map<String, Object> attrs) {
-        this.attrs.putAll(attrs);
+	public void update(Map<String, Object> attrs, boolean permanent) {
+		this.attrs.putAll(attrs);
+		if(permanent){
+			this.attrsBk.putAll(this.attrs);
+		}
         int top = getTop();
         int left = getLeft();
         super.updateBounds(top, left, top + getHeight(), left + getWidth());

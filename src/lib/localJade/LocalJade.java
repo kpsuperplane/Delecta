@@ -24,7 +24,29 @@ public class LocalJade{
     public Map<String, Tag> ids = new HashMap<String, Tag>();
     public Map<String, LinkedList<Tag>> classes = new HashMap<String, LinkedList<Tag>>();
 
+    public Map<Tag, Map<String, Animation>> animationQueue = new HashMap<Tag, Map<String, Animation>>();
+
     public void paint(Graphics g) {
+        Iterator it = animationQueue.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            Map<String, Animation> curSet = ((Map<String, Animation>)pair.getValue());
+            Iterator it2 = curSet.entrySet().iterator();
+            while(it2.hasNext()){
+                Map.Entry pair2 = (Map.Entry)it2.next();
+                Animation cur = (Animation)pair2.getValue();
+                cur.step();
+                if(cur.isComplete()){
+                    it2.remove();
+                }
+            }
+            if(curSet.isEmpty()){
+                it.remove();
+            }
+        }
+        if(!animationQueue.isEmpty()){
+            view.requiresRepaint = true;
+        }
         for(Tag tag : tags){
         	tag.draw(g);
         }
@@ -129,6 +151,7 @@ public class LocalJade{
         if(hovered.size() != oldCount){
             view.repaint();
         }
+
     }
 
 	public void loadView(String filename, View parent) throws Exception{

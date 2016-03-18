@@ -1,7 +1,10 @@
 package lib.localJade.tags;
 
+import lib.localJade.Animation;
+
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 
@@ -69,10 +72,24 @@ abstract public class ElementTag extends Tag{
         if(event.getX() >= left && event.getX() <= left + getWidth() && event.getY() >= top && event.getY() <= top + getHeight()){
             if(type.equals("hover")){
                 if(!root.hovered.containsKey(this) && this.attrs.containsKey("hover")){
-                    Map<String, Object> bk = new HashMap<String, Object>();
-                    bk.putAll(this.attrs);
-                    root.hovered.put(this, bk);
-                    attrs.putAll(parseAttr(this.attrs.get("hover").toString()));
+                    root.hovered.put(this, this.attrsBk);
+                    Map<String, Object> newAttrs = parseAttr(this.attrs.get("hover").toString());
+                    if(!root.animationQueue.containsKey(this)){
+                        Map<String, Animation> tmp = new HashMap<String, Animation>();
+                        Iterator it = newAttrs.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            String key = pair.getKey().toString();
+                            if(transitions.containsKey(key)){
+                                Animation.Set tmpSet = (Animation.Set) transitions.get(key);
+                                tmp.put(key, new Animation(this, key, this.attrs.get(key), newAttrs.get(key), tmpSet.duration, tmpSet.ease));
+                            }
+                        }
+                        root.animationQueue.put(this, tmp);
+                        root.view.requiresRepaint = true;
+                    }else{
+                        update(newAttrs);
+                    }
                 }
             }
             toReturn = true;

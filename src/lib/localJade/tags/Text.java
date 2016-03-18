@@ -27,7 +27,7 @@ public class Text extends ElementTag {
         this.root = root;
 		this.children = children;
 
-        update(attrs);
+        update(attrs, true);
 
 	}
 
@@ -35,8 +35,11 @@ public class Text extends ElementTag {
 		this(new LinkedList<Tag>(), attrs, root);
 	}
 
-    public void update(Map<String, Object> attrs) {
+    public void update(Map<String, Object> attrs, boolean permanent) {
         this.attrs.putAll(attrs);
+        if(permanent){
+            this.attrsBk.putAll(this.attrs);
+        }
         try {
             font = new Font((String)this.attrs.get("font"), Font.class.getField((String)this.attrs.get("style")).getInt(null), (Integer)this.attrs.get("size"));
         } catch (Exception e) {
