@@ -58,7 +58,6 @@ abstract public class ElementTag extends Tag{
     }
 
     public boolean triggerMouseEvent(String type, MouseEvent event){
-        if(!contains(event.getX(), event.getY())) return false;
         int left = getLeft();
         int top = getTop();
         boolean toReturn = false;
