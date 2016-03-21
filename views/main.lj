@@ -1,1 +1,1 @@
-rectangle(background="rgba[00000088]", id="transparentBox", top=10, left=10, hover="[width=500 | background='col[red]']", transition="[width:quad=2000 | background:linear=2000]")
+rectangle(background="rgba[00000088]", id="transparentBox", top=10, left=10, hover="[width=500]", transition="[width:quint=2000]")
